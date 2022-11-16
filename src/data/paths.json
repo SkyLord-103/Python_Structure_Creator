@@ -3,6 +3,7 @@
         "license",
         "README.md",
         ".gitignore",
+        "requirements.txt",
         "src\\*;mainfilename*;.py"
     ],
     "folders": [

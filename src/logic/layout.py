@@ -3,11 +3,6 @@ from logic.console import Console
 from subprocess import run
 import json
 
-
-def Log(*msg: str, end="\n"):
-    print(f'layout.py - DEBUG: ', *msg, end=end)
-
-
 console = Console()
 
 

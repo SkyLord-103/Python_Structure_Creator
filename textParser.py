@@ -1,3 +1,4 @@
+"""Parese text from input.txt into a json (almost) ready script, then exports to output.txt"""
 from os import path
 
 workDir = path.dirname(path.abspath(__file__))
