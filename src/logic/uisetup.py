@@ -1,5 +1,5 @@
-from ui.window import Run
+from ui.window import Window
 
 
 def Start(args):
-    Run(args)
+    Window(args)._createWidgets()
