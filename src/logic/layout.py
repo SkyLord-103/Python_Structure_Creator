@@ -15,12 +15,16 @@ def jsonReparse(pn: str, mfn: str, jsonData: dict) -> dict:
     return rewrite
 
 
-def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: str, vsc: bool):
+def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: str, cyear: str, cfullname: str, vsc: bool):
     if not installationDir or not workDir:
         raise TypeError("Expected 2 arguments!")
 
     def replaceKey(stri: str) -> str:
-        return stri.replace("*;projectname*;", projectName).replace("*;mainfilename*;", mainFileName)
+        return stri.replace(
+            "*;projectname*;", projectName).replace(
+            "*;mainfilename*;", mainFileName).replace(
+            "*;cyear*;", cyear).replace(
+            "*;cfullname*;", cfullname)
 
     installationDir = path.join(installationDir, projectName)
     console.print(
