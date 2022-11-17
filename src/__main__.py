@@ -40,7 +40,6 @@ def main():
     else:  # Commandline running
         Layout(workDir, args.projectname, args.mainfilename, args.dir,
                args.copyrightyear, args.crfullname, args.vsc)
-    #
 
 
 if __name__ == "__main__":
