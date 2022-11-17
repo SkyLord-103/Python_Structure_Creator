@@ -1,0 +1,18 @@
+{
+    "files": [
+        "license",
+        "README.md",
+        ".gitignore",
+        "requirements.txt",
+        "src\\*;mainfilename*;.py"
+    ],
+    "folders": [
+        "build\\",
+        "build\\debug\\",
+        "build\\release\\",
+        "src\\",
+        "src\\ui\\",
+        "src\\data\\",
+        "src\\logic\\"
+    ]
+}
