@@ -12,6 +12,8 @@ parser.add_argument('-ui', '--uimode', action="store_true",
                     help="Open the program in ui mode")
 parser.add_argument('-vsc', '--vsc', action="store_true",
                     help="Open the project folder in vscode after creation")
+parser.add_argument('-git', '--initgit', action="store_true", metavar='',
+                    help="Doesnt work")
 
 parser.add_argument('-pn', '--projectname', required=True,
                     metavar='', help="The name of the project", type=str)
@@ -39,7 +41,7 @@ def main():
         Window(workDir, args)
     else:  # Commandline running
         Layout(workDir, args.projectname, args.mainfilename, args.dir,
-               args.copyrightyear, args.crfullname, args.vsc)
+               args.copyrightyear, args.crfullname, args.vsc, args.initgit)
 
 
 if __name__ == "__main__":

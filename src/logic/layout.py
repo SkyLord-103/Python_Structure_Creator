@@ -15,7 +15,7 @@ def jsonReparse(pn: str, mfn: str, jsonData: dict) -> dict:
     return rewrite
 
 
-def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: str, cyear: str, cfullname: str, vsc: bool):
+def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: str, cyear: str, cfullname: str, vsc: bool, initgit: bool):
     if not installationDir or not workDir or not mainFileName or not projectName or not cyear or not cfullname:
         raise TypeError("Expected 2 arguments!")
 
@@ -78,6 +78,12 @@ def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: s
             try:
                 cmd = f"code {installationDir}"
                 run(cmd, shell=True)
+            except Exception as e:
+                console.print_exception()
+        if initgit:
+            try:
+                pass
+                # run("git init --initial-branch main")
             except Exception as e:
                 console.print_exception()
     except (PermissionError, Exception) as e:
