@@ -1,7 +1,7 @@
 from os import path, remove, makedirs
-from logic.layout import Layout
 from logic.console import Console
-from logic.uisetup import Start
+from logic.layout import Layout
+from ui.window import Window
 import argparse
 
 console = Console()
@@ -36,8 +36,7 @@ def main():
     console.print(f"Opening vscode: {args.vsc}")
 
     if args.uimode:
-        Start(args)
-        # TODO: Run(args)
+        Window(workDir, args)
     else:  # Commandline running
         Layout(workDir, args.projectname, args.mainfilename, args.dir,
                args.copyrightyear, args.crfullname, args.vsc)

@@ -16,7 +16,7 @@ def jsonReparse(pn: str, mfn: str, jsonData: dict) -> dict:
 
 
 def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: str, cyear: str, cfullname: str, vsc: bool):
-    if not installationDir or not workDir:
+    if not installationDir or not workDir or not mainFileName or not projectName or not cyear or not cfullname:
         raise TypeError("Expected 2 arguments!")
 
     def replaceKey(stri: str) -> str:
@@ -25,58 +25,60 @@ def Layout(workDir: str, projectName: str, mainFileName: str, installationDir: s
             "*;mainfilename*;", mainFileName).replace(
             "*;cyear*;", cyear).replace(
             "*;cfullname*;", cfullname)
+    try:
+        installationDir = path.join(installationDir, projectName)
+        console.print(
+            f"Creating project folder: '{projectName}', at: '{installationDir}'")
+        makedirs(installationDir, exist_ok=True)
 
-    installationDir = path.join(installationDir, projectName)
-    console.print(
-        f"Creating project folder: '{projectName}', at: '{installationDir}'")
-    makedirs(installationDir, exist_ok=True)
+        hierarchyJson = json.load(
+            open(path.join(workDir, "data", "paths.json"), "r"))
 
-    hierarchyJson = json.load(
-        open(path.join(workDir, "data", "paths.json"), "r"))
+        for _, rp in enumerate(hierarchyJson["folders"]):
+            rk = replaceKey(rp)
+            subDir = path.join(installationDir, rk)
+            if not path.exists(subDir):
+                console.print(f'Creating folder: [#30c5c4]{rk}')
+                try:
+                    mkdir(subDir)
+                except Exception as e:
+                    console.log(e)
+                    error = f' [red]{e}[/]' if e else ''
+                    console.print(
+                        f'Couldn\'t create folder: [#30c5c4]{rk}[/]'+error)
+            else:
+                console.print(f'Folder already exists: [#30c5c4]{rk}')
+        console.print('Finished creating folders')
 
-    for _, rp in enumerate(hierarchyJson["folders"]):
-        rk = replaceKey(rp)
-        subDir = path.join(installationDir, rk)
-        if not path.exists(subDir):
-            console.print(f'Creating folder: [#30c5c4]{rk}')
+        fileContents = jsonReparse(projectName, mainFileName, json.load(
+            open(path.join(workDir, "data", "default_file_contents.json"), "r")))
+
+        console.print("Creating files")
+        for _, rp in enumerate(hierarchyJson["files"]):
+            rk = replaceKey(rp)
+            filePath = path.join(installationDir, *rk.split('\\'))
+
+            if not path.exists(filePath):
+                console.print(f'Creating file: [#30c5c4]{rk}')
+
+                content = fileContents[rk]
+                with open(filePath, "a") as f:
+                    sizeOfContent = len(content)
+
+                    for cIndex, s in enumerate(content):
+                        endLine = "\n" if cIndex+1 != sizeOfContent else ''
+                        f.write(replaceKey(s)+endLine)
+            else:
+                console.print(f'File already exists: [#30c5c4]{rk}')
+
+        console.print('Finished creating files')
+
+        if vsc:
+            console.print("Opening [#1EA3FF]vscode")
             try:
-                mkdir(subDir)
+                cmd = f"code {installationDir}"
+                run(cmd, shell=True)
             except Exception as e:
-                console.log(e)
-                error = f' [red]{e}[/]' if e else ''
-                console.print(
-                    f'Couldn\'t create folder: [#30c5c4]{rk}[/]'+error)
-        else:
-            console.print(f'Folder already exists: [#30c5c4]{rk}')
-    console.print('Finished creating folders')
-
-    fileContents = jsonReparse(projectName, mainFileName, json.load(
-        open(path.join(workDir, "data", "default_file_contents.json"), "r")))
-
-    console.print("Creating files")
-    for _, rp in enumerate(hierarchyJson["files"]):
-        rk = replaceKey(rp)
-        filePath = path.join(installationDir, *rk.split('\\'))
-
-        if not path.exists(filePath):
-            console.print(f'Creating file: [#30c5c4]{rk}')
-
-            content = fileContents[rk]
-            with open(filePath, "a") as f:
-                sizeOfContent = len(content)
-
-                for cIndex, s in enumerate(content):
-                    endLine = "\n" if cIndex+1 != sizeOfContent else ''
-                    f.write(replaceKey(s)+endLine)
-        else:
-            console.print(f'File already exists: [#30c5c4]{rk}')
-
-    console.print('Finished creating files')
-
-    if vsc:
-        console.print("Opening [#1EA3FF]vscode")
-        try:
-            cmd = f"code {installationDir}"
-            run(cmd, shell=True)
-        except Exception as e:
-            console.print_exception()
+                console.print_exception()
+    except (PermissionError, Exception) as e:
+        console.print_exception()
